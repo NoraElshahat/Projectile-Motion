@@ -1,193 +1,225 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Projectile Motion</title>
-        <link rel="shortcut icon" href="startup.png" type="image/png">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <head>
+    <title>Projectile Motion</title>
+    <link rel="shortcut icon" href="startup.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
 
-        <style>
-            body{
-                height: 100%;
-                margin: 0;
-                position: relative;
-                background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cbccc8)) fixed;
-            }
-            #my-canvas{
-                width: 600px; 
-                height: 200px;
-                margin:200px;
-                position: absolute;
-                top: 0;
-                left: 0;
-
-            }
-            #my-ball{
-                width: 50px;;
-                height:30px; 
-                color: black;
-                border-radius: 50%;
-                margin: 250px;      
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+        position: relative;
+        background: -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            from(#fff),
+            to(#cbccc8)
+          )
+          fixed;
       }
-            h2{
-                text-align: center;
-                color: brown;
-            }
-        </style>
-        
-    </head>
-    <body>
-        <h2>Projectile Motion</h2>
-        <div class="row col-lg-6 col-xs-offset-3 m-auto p-2">
-            <input name="speed" placeholder="Enter speed"/>
-            <input name="angle" placeholder="Enter Angle"/>
-        </div>
-        <canvas id="my-ball"> </canvas>
-        <canvas id="my-canvas"></canvas>
-        <button class="btn btn-success">Start</button>
-        <button class="btn btn-danger">Reset</button>
+      #my-canvas {
+        width: 600px;
+        height: 200px;
+        margin: 200px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      #my-ball {
+        width: 50px;
+        height: 30px;
+        color: black;
+        border-radius: 50%;
+        margin: 250px;
+      }
+      h2 {
+        text-align: center;
+        color: brown;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Projectile Motion</h2>
+    <div class="row col-lg-6 col-xs-offset-3 m-auto p-2">
+      <input
+        name="speed"
+        type="text"
+        id="speed"
+        placeholder="Enter speed"
+        onkeyup="speedVal()"
+      />
+      <input
+        name="angle"
+        placeholder="Enter Angle"
+        id="angle"
+        onkeyup="angleVal()"
+      />
+    </div>
+    <canvas id="my-ball"> </canvas>
+    <canvas id="my-canvas"></canvas>
+    <button class="btn btn-success" onclick="start()">Start</button>
+    <button class="btn btn-danger">Reset</button>
 
     <!-- to draw x-axis and y-axis -->
     <script>
-        var grid_size = 25;
-        var x_axis_distance_grid_lines = 5;
-        var y_axis_distance_grid_lines = 0;
-        var x_axis_starting_point = { number: 1};
-        var y_axis_starting_point = { number: 1};
+      var grid_size = 25;
+      var x_axis_distance_grid_lines = 5;
+      var y_axis_distance_grid_lines = 0;
+      var x_axis_starting_point = { number: 1 };
+      var y_axis_starting_point = { number: 1 };
 
-        var canvas = document.getElementById("my-canvas");
-        var ctx = canvas.getContext("2d");
-        var canvas_width = canvas.width;
-        var canvas_height = canvas.height;
+      var canvas = document.getElementById('my-canvas');
+      var ctx = canvas.getContext('2d');
+      var canvas_width = canvas.width;
+      var canvas_height = canvas.height;
 
-        var num_lines_x = Math.floor(canvas_height/grid_size);
-        var num_lines_y = Math.floor(canvas_width/grid_size);
-        //Drawing
-        for(var i=0; i<=num_lines_x; i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            
-            // If line represents X-axis draw in different color
-            if(i == x_axis_distance_grid_lines) 
-                ctx.strokeStyle = "#000000";
-            else
-                ctx.strokeStyle = "#e9e9e9";
-            
-            if(i == num_lines_x) {
-                ctx.moveTo(0, grid_size*i);
-                ctx.lineTo(canvas_width, grid_size*i);
-            }
-            else {
-                ctx.moveTo(0, grid_size*i+0.5);
-                ctx.lineTo(canvas_width, grid_size*i+0.5);
-            }
-            ctx.stroke();
+      var num_lines_x = Math.floor(canvas_height / grid_size);
+      var num_lines_y = Math.floor(canvas_width / grid_size);
+      //Drawing
+      for (var i = 0; i <= num_lines_x; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+
+        // If line represents X-axis draw in different color
+        if (i == x_axis_distance_grid_lines) ctx.strokeStyle = '#000000';
+        else ctx.strokeStyle = '#e9e9e9';
+
+        if (i == num_lines_x) {
+          ctx.moveTo(0, grid_size * i);
+          ctx.lineTo(canvas_width, grid_size * i);
+        } else {
+          ctx.moveTo(0, grid_size * i + 0.5);
+          ctx.lineTo(canvas_width, grid_size * i + 0.5);
         }
+        ctx.stroke();
+      }
 
-        //Drawing y
-        for(i=0; i<=num_lines_y; i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            
-            // If line represents Y-axis draw in different color
-            if(i == y_axis_distance_grid_lines) 
-                ctx.strokeStyle = "#000000";
-            else
-                ctx.strokeStyle = "#e9e9e9";
-            
-            if(i == num_lines_y) {
-                ctx.moveTo(grid_size*i, 0);
-                ctx.lineTo(grid_size*i, canvas_height);
-            }
-            else {
-                ctx.moveTo(grid_size*i+0.5, 0);
-                ctx.lineTo(grid_size*i+0.5, canvas_height);
-            }
-            ctx.stroke();
+      //Drawing y
+      for (i = 0; i <= num_lines_y; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+
+        // If line represents Y-axis draw in different color
+        if (i == y_axis_distance_grid_lines) ctx.strokeStyle = '#000000';
+        else ctx.strokeStyle = '#e9e9e9';
+
+        if (i == num_lines_y) {
+          ctx.moveTo(grid_size * i, 0);
+          ctx.lineTo(grid_size * i, canvas_height);
+        } else {
+          ctx.moveTo(grid_size * i + 0.5, 0);
+          ctx.lineTo(grid_size * i + 0.5, canvas_height);
         }
-        
-        ctx.translate(y_axis_distance_grid_lines*grid_size, x_axis_distance_grid_lines*grid_size);
+        ctx.stroke();
+      }
 
-        // Ticks marks along the positive X-axis
-        for(i=1; i<(num_lines_y - y_axis_distance_grid_lines); i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "#000000";
+      ctx.translate(
+        y_axis_distance_grid_lines * grid_size,
+        x_axis_distance_grid_lines * grid_size
+      );
 
-            // Draw a tick mark 6px long (-3 to 3)
-            ctx.moveTo(grid_size*i+0.5, -3);
-            ctx.lineTo(grid_size*i+0.5, 3);
-            ctx.stroke();
+      // Ticks marks along the positive X-axis
+      for (i = 1; i < num_lines_y - y_axis_distance_grid_lines; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#000000';
 
-            // Text value at that point
-            ctx.font = '9px Arial';
-            ctx.textAlign = 'start';
-            ctx.fillText(x_axis_starting_point.number*i , grid_size*i-2, 15);
-        }
+        // Draw a tick mark 6px long (-3 to 3)
+        ctx.moveTo(grid_size * i + 0.5, -3);
+        ctx.lineTo(grid_size * i + 0.5, 3);
+        ctx.stroke();
 
-        // Ticks marks along the negative X-axis
-        for(i=1; i<y_axis_distance_grid_lines; i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "#000000";
+        // Text value at that point
+        ctx.font = '9px Arial';
+        ctx.textAlign = 'start';
+        ctx.fillText(x_axis_starting_point.number * i, grid_size * i - 2, 15);
+      }
 
-            // Draw a tick mark 6px long (-3 to 3)
-            ctx.moveTo(-grid_size*i+0.5, -3);
-            ctx.lineTo(-grid_size*i+0.5, 3);
-            ctx.stroke();
+      // Ticks marks along the negative X-axis
+      for (i = 1; i < y_axis_distance_grid_lines; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#000000';
 
-            // Text value at that point
-            ctx.font = '9px Arial';
-            ctx.textAlign = 'end';
-            ctx.fillText(-x_axis_starting_point.number*i , -grid_size*i+3, 15);
-        }
+        // Draw a tick mark 6px long (-3 to 3)
+        ctx.moveTo(-grid_size * i + 0.5, -3);
+        ctx.lineTo(-grid_size * i + 0.5, 3);
+        ctx.stroke();
 
-        // Ticks marks along the positive Y-axis
-        // Positive Y-axis of graph is negative Y-axis of the canvas
-        for(i=1; i<(num_lines_x - x_axis_distance_grid_lines); i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "#000000";
+        // Text value at that point
+        ctx.font = '9px Arial';
+        ctx.textAlign = 'end';
+        ctx.fillText(-x_axis_starting_point.number * i, -grid_size * i + 3, 15);
+      }
 
-            // Draw a tick mark 6px long (-3 to 3)
-            ctx.moveTo(-3, grid_size*i+0.5);
-            ctx.lineTo(3, grid_size*i+0.5);
-            ctx.stroke();
+      // Ticks marks along the positive Y-axis
+      // Positive Y-axis of graph is negative Y-axis of the canvas
+      for (i = 1; i < num_lines_x - x_axis_distance_grid_lines; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#000000';
 
-            // Text value at that point
-            ctx.font = '9px Arial';
-            ctx.textAlign = 'start';
-            ctx.fillText(-y_axis_starting_point.number*i , 8, grid_size*i+3);
-        }
+        // Draw a tick mark 6px long (-3 to 3)
+        ctx.moveTo(-3, grid_size * i + 0.5);
+        ctx.lineTo(3, grid_size * i + 0.5);
+        ctx.stroke();
 
-        // Ticks marks along the negative Y-axis
-        // Negative Y-axis of graph is positive Y-axis of the canvas
-        for(i=1; i<x_axis_distance_grid_lines; i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "#000000";
+        // Text value at that point
+        ctx.font = '9px Arial';
+        ctx.textAlign = 'start';
+        ctx.fillText(-y_axis_starting_point.number * i, 8, grid_size * i + 3);
+      }
 
-            // Draw a tick mark 6px long (-3 to 3)
-            ctx.moveTo(-3, -grid_size*i+0.5);
-            ctx.lineTo(3, -grid_size*i+0.5);
-            ctx.stroke();
+      // Ticks marks along the negative Y-axis
+      // Negative Y-axis of graph is positive Y-axis of the canvas
+      for (i = 1; i < x_axis_distance_grid_lines; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#000000';
 
-            // Text value at that point
-            ctx.font = '9px Arial';
-            ctx.textAlign = 'start';
-            ctx.fillText(y_axis_starting_point.number*i , 8, -grid_size*i+3);
-        }
-       
+        // Draw a tick mark 6px long (-3 to 3)
+        ctx.moveTo(-3, -grid_size * i + 0.5);
+        ctx.lineTo(3, -grid_size * i + 0.5);
+        ctx.stroke();
+
+        // Text value at that point
+        ctx.font = '9px Arial';
+        ctx.textAlign = 'start';
+        ctx.fillText(y_axis_starting_point.number * i, 8, -grid_size * i + 3);
+      }
     </script>
 
     <!-- to draw a ball -->
     <script>
-        
-        var c = document.getElementById("my-ball");
-        var ctx = c.getContext("2d");
-        ctx.fillStyle = "#000000";
-        ctx.beginPath();
-        ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-        ctx.fill();
+      var c = document.getElementById('my-ball');
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+      ctx.fill();
     </script>
-</body>
+    <script>
+      function speedVal() {
+        var speed = document.getElementById('speed').value;
+        window.speed = speed;
+      }
+      function angleVal() {
+        var angle = document.getElementById('angle').value;
+        window.angle = angle;
+        console.log(window);
+      }
+      function start() {
+        var speed = window.speed;
+        var angle = window.angle;
+        var time = (2 * speed * Math.sin(angle)) / 9.8;
+      }
+    </script>
+  </body>
 </html>
