@@ -53,10 +53,10 @@ const draw = () => {
   ctx.stroke();
   ctx.closePath();
   ctx.restore();
-  count += 0.15;
+  count += 0.1;
 };
 
-const checkS = () => {
+const chackValues = () => {
   if (isNaN(speed.value) || speed.value === "") {
     alert("velocity: " + speed.value + "not a number");
     return 0;
@@ -80,5 +80,5 @@ const reset = () => {
 
 const start = () => {
   intial();
-  if (checkS()) timer = setInterval(draw, 10);
+  if (chackValues()) timer = setInterval(draw, 10);
 };
