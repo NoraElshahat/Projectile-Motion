@@ -39,12 +39,13 @@ const intial = () => {
 const draw = () => {
   ctx.save();
   ctx.restore();
-  if (y < canvasHeight - radius + 1 && x < canvasWidth - radius + 1) {
-    y = startPointY - (velocityY * count - (1 / 2) * g * Math.pow(count, 2));
-    x = startPointX + velocityX * count;
-  } else {
-    clearInterval(timer);
-  }
+  //ama arw7
+  // if (y < canvasHeight - radius + 1 && x < canvasWidth - radius + 1) {
+  //   y = startPointY - (velocityY * count - (1 / 2) * g * Math.pow(count, 2));
+  //   x = startPointX + velocityX * count;
+  // } else {
+  //   clearInterval(timer);
+  // }
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = "black";
